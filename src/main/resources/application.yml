@@ -6,3 +6,8 @@ logging.level:
   org.springframework.boot: INFO
   org.springframework.web: DEBUG
     
+    
+spring:
+  h2:
+    console:
+      enabled: true
