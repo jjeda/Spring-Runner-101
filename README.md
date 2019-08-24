@@ -1,5 +1,5 @@
 ## Mastering Spring Web 101 Workshop
-- [박용권, 김지헌 님의 워크샵](https://springrunner.io/training/mastering-spring-web-101-workshop/) 참가하였다
+- [박용권, 김지헌 님의 워크샵](https://springrunner.io/training/mastering-spring-web-101-workshop/)에 참가하였다
 
 ## 목표
 - Spring MVC의 구조와 아키텍처를 살펴봅니다.
