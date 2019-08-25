@@ -2,6 +2,8 @@ package todoapp.web.user;
 
 import java.util.Objects;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ public class UserRestController {
 	
 	//그냥 주면안되나?
 
+	@RolesAllowed(UserSession.ROLE_USER)
 	@GetMapping("/api/user/profile")
 	public ResponseEntity<UserProfile> userProfile(UserSession session) {
 //		UserSession session = sessionRepository.get();

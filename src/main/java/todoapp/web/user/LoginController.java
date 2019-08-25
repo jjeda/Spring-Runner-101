@@ -12,6 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 
 import todoapp.core.user.application.UserJoinder;
 import todoapp.core.user.application.UserPasswordVerifier;
@@ -78,6 +81,21 @@ public class LoginController {
 		model.addAttribute("message","입력값이 올바르지 않습니다.");
 		return "login";
 	}
+	
+	@RequestMapping("/logout")
+	public View logout() {
+		sessionRepository.clear();
+		return new RedirectView("/todos");
+		//return "redirect:/todos" 와 결과적으로 동일
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static class LoginCommand {
 		
