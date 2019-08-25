@@ -13,5 +13,10 @@ public class TodoEntityNotFoundException extends TodoEntityException {
         super("Todo 엔티티를 찾을 수 없습니다. (id: %d)", id);
         this.id = id;
     }
+    
+    @Override
+    public Object[] getArguments() {
+        return new Object[] { String.valueOf(id) };
+    }
 
 }

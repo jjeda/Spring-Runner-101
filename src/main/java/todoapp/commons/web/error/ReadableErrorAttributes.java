@@ -1,6 +1,8 @@
 package todoapp.commons.web.error;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,14 +49,40 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         Map<String, Object> attributes = delegate.getErrorAttributes(webRequest, includeStackTrace);
         
         String defaultMessage = (String) attributes.get("message");
-        Throwable error = getError(webRequest);
+        
 
         // TODO attributes, error 을 사용해서 message 속성을 읽기 좋은 문구로 가공한다.
         // TODO ex) attributes.put("message", "문구");
         
-        String errorCode = String.format("Exception.%s", error.getClass().getSimpleName());
-        String errorMessage = messageSource.getMessage(errorCode, new Object[0],defaultMessage,webRequest.getLocale());
-        attributes.put("message", errorMessage);
+//        Throwable error = getError(webRequest);
+//        String errorCode = String.format("Exception.%s", error.getClass().getSimpleName());
+//        String errorMessage = messageSource.getMessage(errorCode, new Object[0],defaultMessage,webRequest.getLocale());
+//        attributes.put("message", errorMessage);
+        
+        
+        Throwable error = getError(webRequest);
+        if (MessageSourceResolvable.class.isAssignableFrom(error.getClass())) {
+            String errorMessage = messageSource.getMessage(
+                    (MessageSourceResolvable) error, webRequest.getLocale());
+            attributes.put("message", errorMessage);
+        } else {
+            // errorCode = Exception.MethodArgumentNotValidException        
+            String errorCode = String.format("Exception.%s", error.getClass().getSimpleName());
+            String errorMessage = messageSource.getMessage(
+                    errorCode, new Object[0], defaultMessage, webRequest.getLocale());
+            attributes.put("message", errorMessage);
+        }
+        
+        if (error instanceof MethodArgumentNotValidException) {
+        	List<String> errors = ((MethodArgumentNotValidException)error)
+        			.getBindingResult()
+        			.getAllErrors()
+        			.stream()
+        			.map(ob -> messageSource.getMessage(ob, webRequest.getLocale()))
+        			.collect(Collectors.toList());
+        	attributes.put("error", errors);
+        	
+        }
         
         return attributes;
     }
