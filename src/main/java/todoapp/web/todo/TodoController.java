@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import todoapp.commons.domain.Spreadsheet;
@@ -42,12 +43,14 @@ public class TodoController {
 //		return new ModelAndView("todos", "site", site);
 //	}
 	
+	
+	
 	@RequestMapping("/todos")
 	public String todos(Model model) {
 		List<Todo> todos = finder.getAll();
 		Spreadsheet sheet = new TodoToSpreadsheetConverter().convert(todos);
 		
-		model.addAttribute("site",site);
+//		model.addAttribute("site",site);
 		model.addAttribute(sheet);
 		return "todos";
 	}
