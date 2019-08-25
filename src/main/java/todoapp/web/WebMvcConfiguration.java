@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 import todoapp.commons.web.error.ReadableErrorAttributes;
 import todoapp.commons.web.view.CommaSeparatedValuesView;
+import todoapp.security.UserSessionRepository;
+import todoapp.security.web.method.UserSessionArgumentResolver;
 
 /**
  * Spring Web MVC 설정
@@ -25,7 +28,13 @@ import todoapp.commons.web.view.CommaSeparatedValuesView;
 //클래스 단위로 
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    @Override
+	private UserSessionRepository sessionRepository;
+	
+    public WebMvcConfiguration(UserSessionRepository sessionRepository) {
+		this.sessionRepository = sessionRepository;
+	}
+
+	@Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         // ContentNegotiating 관련 설정은 ContentNegotiationCustomizer를 통해 해야한다.
         // 여기서 직접 설정하면, 스프링부트가 구성한 ContentNegotiating 설정이 무시된다.
@@ -51,6 +60,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public ErrorAttributes errorAtrriAttributes(MessageSource messageSource) {
     	return new ReadableErrorAttributes(messageSource);
     }
+
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(new UserSessionArgumentResolver(sessionRepository));
+	}
     
     
     

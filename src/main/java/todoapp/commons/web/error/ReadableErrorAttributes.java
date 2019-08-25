@@ -80,7 +80,7 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         			.stream()
         			.map(ob -> messageSource.getMessage(ob, webRequest.getLocale()))
         			.collect(Collectors.toList());
-        	attributes.put("error", errors);
+        	attributes.put("errors", errors);
         	
         }
         

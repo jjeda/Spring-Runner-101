@@ -1,5 +1,8 @@
 site:
   author : jjeda
+  features:
+    auth : true
+    
 
 logging.level:
   todoapp: DEBUG
